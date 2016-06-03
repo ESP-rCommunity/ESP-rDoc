@@ -1,4 +1,4 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf400
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
 \cocoascreenfonts1{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
 {\colortbl;\red255\green255\blue255;}
 {\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
@@ -19,48 +19,110 @@ Jon W. Hand, ESRU, Glasgow, Scotland\
 These notes are intended for ESP-r developers who wish to work with a 'native version' of ESP-r on computers running \
 W7. There is also an alternative approach to running ESP-r on Windows computers via Cygwin (discussed elsewhere).  \
  \
-The Windows port of ESP-r uses the standard source distribution as well as the same GNU compiler suite as all other versions of ESP-r. To enable this compilation process and provide access to underlying operating system services we use MinGW (Minimalist GNU for Windows) which is a Windows port of the GNU C, c++ and Fortran 90 compilers and MSYS (Minimal SYStem) which provides basic shell, make, and install utilities needed to support MinGW. Reading this whole document prior to touching the keyboard is a REALLY GOOD IDEA.\
+The Windows port of ESP-r uses the standard source distribution as well as the same GNU compiler suite as all other versions of ESP-r. To enable this compilation process and provide access to underlying operating system services we use MSYS2 which provides basic shell, make, and install utilities needed to support the Windows port of the GNU C, c++ and Fortran 90 compilers. Reading this whole document prior to touching the keyboard is a REALLY GOOD IDEA.\
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\b \cf0 Setting up MinGW and MSYS
+\b \cf0 Setting up MSYS2 and compilers
 \b0 \
 \
-MSYS and MinGW are hosted on SourceForge and documentation and links are available at <http://www.mingw.org>. A combined installer mingw-get-inst for MinGW and MSys can be found at: <https://sourceforge.net/projects/mingw/files/Installer/> there is a mingw-get-inst-xxx.README.txt and a mingw-get-inst-xxx.exe (where xxx is a date code).\
- \
-There are a number of packages you need from this installer to setup MSYS and MinGW on your computer. A good place to put the downloaded files is C:\\TEMP. The installer has tick boxes for C C++ Fortran as well as the Msys base system and developers tool kit. You are offered a choice to use the in-built packages or to download a fresh list of packages (choose the latter). You will be asked where to put it all, use the default C:\\MinGW.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri-3676
+\cf0 Information about msys2 (minimal system for Windows) can be found at sourceforge.net/projects/msys2/. 32bit and 64bit installers and instructions are found at msys2.github.io. Run the installer appropriate to your PC. When you are given the option to run msys2 \'96 say yes.  A new folder will appear on your C drive named either msys64 or msys32. A command window (with an M in the upper left corner) will start up and that is where you will be issuing most of your commands. Software within msys2 is managed by a package management tool called pacman. Its command line arguments are used to identify what is to installed, updated or removed and it checks with a remote repository to determine dependencies for each \'91package\'92.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 Pacman is also used to do the initial setup of msys2. To begin issue the following commands in the msys2 command window and press return:\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+
+\i \cf0 pacman --needed -Sy bash pacman pacman-mirrors msys2-runtime\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+
+\i0 \cf0 \
+When these tasks complete you will need to shutdown msys2 by typing 
+\i exit. 
+\i0\b \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+
+\i\b0 \cf0 \
+Restarting msys2\
 \
-Note on the sourceforge.net site are folders for contributions which might be useful. One of the tools that comes with the\
-initial download is a command line tool named mingw-get. This is a package manager with a simple syntax:\
-  mingw-get list  (lists available packages)\
-  mingw-get install packagename\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri-3391
+
+\i0 \cf0 To complete the install of msys2 will require starting msys2. The sequence can also be used after the install process is complete.  Go to the Windows Start button and open up the 
+\i All programs
+\i0  tab and look for an entry with MSYS in the name e.g. MSYS2 64bit. Open this up and select MSYS2 Shell (you might also create a shortcut to this). \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+\cf0 \
+In the restarted msys2 command window give the commands:\
 \
-For example, if part of the compiler suite was problematic and you wanted to download again the gcc compiler you would use a command:\
-  mingw-get install gcc\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+
+\i \cf0 pacman -Syu\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+
+\i0 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri-3353
+\cf0 This scans and recommends packages which can be updated. If it finds any agree to them and when that task completes do another restart of msys2. The next step installs software needed for entget. In the re-started command window give the following commands:\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri-3118
+
+\i \cf0 pacman -S nano make gettext base-devel subversion net-utils gcc-fortran libxml2-devel libxslt-devel\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+
+\i0 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri-2958
+\cf0 Several of these include multiple packages, use the 
+\i return
+\i0  key to signal that you want them all. You might have to use the 
+\i return
+\i0  key twice to get all of the dependencies.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+
+\i \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+
+\i0\b \cf0 Windows & msys2\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+
+\b0 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri-2619
+\cf0 Inside the C:\\msys64 or C:\\msys32 folder are a number of subfolders. Use Windows Explorer to have a look. The folder you are mostly interested in will be either C:\\msys64\\
+\i home 
+\i0 or C:\\
+\i msys32\\home
+\i0 . If your Windows login name is fred then there will be a folder C:\\msys64\\
+\i home\\fred 
+\i0 or C:\\
+\i msys32\\home\\fred
+\i0 . When you are working within the msys2 command window this is your location. Since Windows can view and copy and delete files within the msys2 folders you can use Explorer if you find that more convenient for file operations.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri-2534
+\cf0 To view or edit the files acquired/generated with 
+\i entget
+\i0  a text editor is required \'96 Notepad++ is a better choice than Wordpad or notepad. Notepad++ is free and can open multiple files at the same time and is designed to work with ASCII files. A web search will easily locate an installer for Notepad++.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri-2586
+\cf0 To conclude setting up msys2 there are a number of folders which will be convenient to have in the \'91home\'92 folder. See the Appendix for the syntax of the 
+\i cd
+\i0  and 
+\i mkdir
+\i0  commands. The following commands will take you to your home folder and then create folders for scripts, for tests for entget related files and for data-or-log files.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ri0
+\cf0 \
+  
+\i cd\
+  mkdir bin\
+  mkdir Models\
+  mkdir Src\
 \
-Once you have ticked the boxes in the combined installer the instructions will be applied. This involves downloading, extracting and installing dozens of 'packages'. At the end of the install process you will find the following structure:\
-C:\\MinGW\
-    - bin  (compilers)\
-    - doc\
-    - include\
-    - lib\
-    - libexe\
-    - mingw32\
-    - msys (shells)\
-       - 1.0\
-         msys.bat (click this to start msys or make a shortcut)\
-         - bin (lots of executables)\
-         - etc\
-         - home (user accounts and files live here)\
-           - username\
-         - include\
-         - lib\
-         - sbin\
-         - share\
-         - var\
-    - share\
-    - var\
-\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\i0 \cf0 \
 The installer may place an Msys icon on your computer, if not find it C:\\MinGW\\msys\\1.0\\msys.bat.  This starts a command window with an interpreter similar to bash and sh on a Linux computer. It may look a bit like a DOS window, but it has a more powerful syntax. The command window deals with text based commands and can run text based applications and scripts. For example the pattern matching tools grep and awk are available.  A subset of the standard commands you would find on a Linux computer are included (look in the C:\\MinGw\\msys\\1.0\\bin).\
 \
 When you start up the command window you are actually working in C:\\MinGW\\msys\\1.0\\home\\your_user_name. This is your HOME folder when you are working within Msys. Those who are familiar with Linux would populate their HOME with folders such as bin, Models, Src via commands (within the msys command window) such as:\
@@ -73,8 +135,9 @@ When you start up the command window you are actually working in C:\\MinGW\\msys
 \
 Remember - in the MSYS command terminal use Linux commands.  Applications you start from within the MSYS command syntax are generally restricted to the executables within the C:MinGW\\msys\\1.0\\bin folder. \
 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\b Extensions to Msys\
+\b \cf0 Extensions to Msys\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
 \b0 \cf0 \
