@@ -1,5 +1,5 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf400
-\cocoascreenfonts1{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\froman\fcharset0 Times-Roman;}
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+\cocoascreenfonts1{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
 {\colortbl;\red255\green255\blue255;}
 \paperw11900\paperh16840\margl1440\margr1440\vieww14460\viewh11680\viewkind0
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
@@ -8,7 +8,7 @@
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qc
 
 \b \cf0 Installing Ubuntu for use with ESP-r\
-4 March 2015\
+24 October 2016\
 ESRU, Glasgow, Scotland
 \b0 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
@@ -35,9 +35,9 @@ ESRU, Glasgow, Scotland
 
 \fs20 \cf0 Have the following information available before you start:\
 \
-a) the disk space available and RAM  - Linux can take as little as 6GB of disk space and will run with ~1GB of RAM. More memory (e.g. 2 or 3GB) will increase the speed of your assessments and results recovery tasks.  10GB of disk space is ok for general use in a virtual machine or computer with limited disk space.  Complex models can generate results files of 2-4GB so consider the scope of likely work to be carried out.\
+a) the disk space available and RAM  - Linux can take as little as 6GB of disk space and will run with ~1GB of RAM. More memory (e.g. 2 or 3GB) will increase the speed of your assessments and results recovery tasks.  10GB of disk space is ok for general use in a virtual machine or computer with limited disk space.  Complex models can generate results files of 2-5GB so consider the scope of likely work to be carried out.\
 \
-b) the layout of the disk(s) and partition(s) on the machine - you may be wanting to dual-boot or to use a virtual drive so locate where space is available.  If you are dual booting with Windows install Linux after Windows.\
+b) the layout of the disk(s) and partition(s) on the machine - you may be wanting to dual-boot or to use a virtual drive so locate where space is available.  If you are dual booting with Windows install Linux AFTER Windows.\
 \
 c) the IP address, machine name/domain, router etc.\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
@@ -124,39 +124,56 @@ ESP-r uses a custom Install script. The Install script supports command line dir
 \
 The following steps will create a standard distribution in the traditional location.  Setup the distribution folder\'85. For example:  \
   
-\b sudo mkdir /usr/esru
+\b sudo mkdir /opt/esru
 \b0  \
   
-\b sudo chown your_login_name /usr/esru
+\b sudo chown your_login_name /opt/esru
 \b0    \
 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
-\cf0   You need to include the directive 
+\cf0 You need to include the directive 
 \b --gcc4 
 \b0 in the Install script below. And if you want to specify which version of the compiler to use remember to include 
 \b --compiler_version -4.4 
-\b0 (substitute the specific number to match the name of the executable e.g. gcc-4.3 or gcc-4.6).\
+\b0 (substitute the specific number to match the name of the executable e.g. gcc-4.8 or gcc-5).\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 \cf0 \
-Create a folder structure for Source code in your home folder, checkout the current source distribution via svn or git command and use the Install script to build the distribution in the folder /usr/esru with the GCC version 4 compilers:\
+Create a folder structure for Source code in your home folder, checkout the current source distribution via the following commands and use the Install script to build the distribution in the folder /usr/esru with the GCC version 4 & 5 compilers:\
 \pard\tx560\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
 \b \cf0 \
   cd\
   mkdir Src\
   cd Src\
-  mkdir esru\
-\pard\tx560\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720
-\cf0   git clone \'96recursive https://github.com/ESP-rCommunity/ESP-rSource.git
-\f1\b0\fs24 \
+  mkdir ESPrgit\
+  cd ESPrgit\
+  git clone --recursive https://github.com/ESP-rCommunity/ESP-rSource.git\
+  git clone --recursive https://github.com/ESP-rCommunity/ESP-rDatabases.git\
+  git clone --recursive https://github.com/ESP-rCommunity/ESP-rModels.git\
+  git clone --recursive https://github.com/ESP-rCommunity/ESP-rDoc.git\
+\
 \pard\tx560\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\f0\b\fs20 \cf0 \
-   cd <to the folder with the Install script>\
-  ./Install -d /opt/esru --gcc4 --debug
-\b0 \
+\b0 \cf0 Then use rsync to get the contents of ESP-rDatabases, ESP-rModels, and ESP-rDoc into a consistent master folder so a full install can be carried out. Here are the steps assuming a folder ESP-rMaster is created:\
+\pard\tx560\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b \cf0   mkdir ESP-rMaster\
+  rsync -av ESP-rSource/ ESP-rMaster/\
+  rsync -av ESP-rDatabases/ ESP-rMaster/data/\
+  rsync -av ESP-rDoc/ ESP-rMaster/doc/\
+  rsync -av ESP-rModels/ ESP-rMaster/models/\
 \
-(Say yes to XML if you have that library, say yes to databases and yes to example models and say yes to debug.  Go and have a cup of coffee). There are alternatives Install_o1 Install_o2 Install_o3 which impose different compiler options to speed up numerical calculations (at the expense of a longer compile).\
+\pard\tx560\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b0 \cf0 In ESP-rMaster will be everything you need to fully build ESP-r. You can remove the hidden .git bookkeepping folders within ESP-rMaster as they are no longer needed. To build ESP-r in this example to /opt/esru give the following commands:\
+\pard\tx560\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b \cf0   cd ESP-rMaster\
+  ./Install -d /opt/esru --gcc4 --debug\
+\pard\tx560\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b0 \cf0 \
+(Say yes to XML if you have that library, say yes to databases and yes to example models and say yes to debug.  Go and have a cup of coffee). There are alternatives Install_o1 Install_o2 Install_o3 which impose different compiler options to speed up numerical calculations (1.5-2x at the expense of a longer compile).\
 \pard\tx560\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720
 \cf0 You have the option to compile for three different ESP-r interfaces.  The pure-text option is suitable for automated production work as all tasks are carried out via keyboard commands. The X11 interface is the [traditional] interface form.  The GTK interface uses a different graphic library and looks like the Native Windows version of ESP-r. \
 \
@@ -191,8 +208,8 @@ Or, copy the link_to and link_to_bash scripts in the /usr/esru/esp-r/scripts fol
 
 \b   cd \
   mkdir bin\
-  cp /usr/esru/esp-r/scripts/link_to ~/bin\
-  cp /usr/esru/esp-r/scripts/link_to_bash ~/bin\
+  cp /opt/esru/esp-r/scripts/link_to ~/bin\
+  cp /opt/esru/esp-r/scripts/link_to_bash ~/bin\
   cd bin\
   ./link_to /opt/esru/esp-r/bin\
   cd\
