@@ -28,25 +28,25 @@ There are options to define locations for all surfaces which use
 a specific MLC or material or for all surfaces facing ambient
 conditions. 
 
-Some topics such as weather or control are defined in the concept
-of time rather than location and so an [all_year] could be created
+Some topics such as weather or control are defined via time
+rather than location and so an [all_year] could be created
 for use with weather or control attributes.
 
-Lastly the user creates a list of [uncertainty pairs] with
-combine the defined concepts and defined location. When bps 
-starts it will recognise that there are uncertainty defintions 
+Lastly the user creates a list of [uncertainty pairs] which
+combine the defined [what-is-uncertain] and defined location. 
+When bps starts it recognises that there are uncertainty defintions 
 and ask the user whether a differential, factorial or Monti-Carlo 
 assessment should be used and how many runs should be comissioned 
 beyoned the base case model, typically 50-100. 
 
 At the start of each run the model details are scanned and
 the uncertainty description drives the modification of the model
-attributes in memory ( no mode files are changed), a random number
+attributes in memory (no model files are changed), a random number
 is generated (a standard distribution between -2 and +2) which is
 applied to each uncertainty concept and its range/bounds directives.
-All runs are held in the same results file as separate [sets].
+All runs are held in the same results file as separate [results sets].
 
-The results analysis facility will also recognise the uncertainty
+The results analysis facility also recognises the uncertainty
 sets and enable a [sensitivity] menu which allows analysis within
 the full range of sets or between specific sets.
 
