@@ -32,7 +32,7 @@ An Integrated Performance View is incomplete or missing.
 Databases associated with the model:
  pressure distributions : pressc.db1
  materials              : /home/jon/esru_03aug/esp-r/databases/material.db3.a
- constructions          : /home/jon/esru_03aug/esp-r/databases/multicon.db2
+ constructions          : /home/jon/esru_03aug/esp-r/databases/multicon.db3
  plant components       : plantc.db1
  event profiles         : /home/jon/esru_03aug/esp-r/databases/profiles.db2.a
  optical properties     : optics.db2

@@ -19,7 +19,7 @@
 *mlc  ../dbs/cellular.constrdb # constructions db
 *stdopt  optics.db2 # optical db
 *stdprs  pressc.db1 # pressure coef db
-*stdevn  profiles.db1.a # profiles db
+*stdevn  profiles.db2.a # profiles db
 *stdmscldb  mscomp.db1 # miscel cmp db
 *stdmould  mould.db1 # mould isopleths
 *sim_parameters, 3, 2,10,4  # simulation parameters
