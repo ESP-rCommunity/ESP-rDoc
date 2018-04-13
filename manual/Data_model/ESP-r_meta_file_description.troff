@@ -26,7 +26,7 @@ Edited by Dr. Jon W. Hand
 Energy Systems Research Unit
 of the University of Strathclyde
 
-Version of 20 April 2010
+6 March 2018
 .sp 2
 .SH
 Introduction
@@ -159,18 +159,14 @@ via META components.  The figure below shows the layout of the model to be creat
 Figure 1: Overall view of model to be created
 .sp 0.5
 .LP
-There are three types of zones included in the file – a room named 
-metal_box5 is created from a box shape into which a window and a door 
-is inserted. A separate triangular room has been created on the north 
-side from a extrude shape with a window inserted into one surface and a 
-door inserted into another. The roof space zone is created from a poly shape (it cannot
-be derived from a box or an extrusion). 
+There are three types of zones included in the file, a room named 
+metal_box5 is created from a box shape. A separate triangular 
+room has been created on the north 
+side from a extrude shape. The roof space zone is created 
+from a poly shape (it cannot be derived from a box or an extrusion). 
 .LP
 The metal_box5 room and the triangular room use META descriptors
-for the general form of the zone as well as doors and windows.  Such
-META desriptors for doors and windows are optional for poly shape zones 
-as doors and windows are explicit surfaces in ESP-r models and the
-poly room type. 
+for the general form of the zone.
 .LP
 Combinations of these three general shape types  will allow 3rd 
 party applications to generate a wide range of ESP-r models. Any box
@@ -218,10 +214,7 @@ Figure 2: Details of the box shaped room
 .ES
 .LP
 The box shaped room is the most primitive initial form and as such is 
-the least verbose of the room forms. The syntax treats
-doors and windows as child surfaces to the parent surfaces created 
-with the initial room shape. Child surfaces, once created, have all of 
-the thermophysical attributes of a surface within ESP-r.
+the least verbose of the room forms. 
 .sp 0.5
 .\" 353 x 334 is 0.946
 .PSPIC room_pavilion.eps 10.0c 9.946c
@@ -304,9 +297,8 @@ sloped roof because neither of them includes a provision for sloped
 surfaces.
 .LP
 Since a GEN description in ESP-r includes explicit polygons for doors 
-and windows they can be so described in the META file.  And the 
-language tokens for adding child windows and doors are also applicable 
-for a poly shaped room.  The choice of explicit polygons or polygons 
+and windows they can be so described in the META file.  The choice 
+of explicit polygons or polygons 
 generated from META instructions, or even a mix of the two 
 is up to the user. General advise is not to mix both styles within 
 a single parent surface (it is possible for the parsing code
@@ -345,8 +337,6 @@ the file contents each of the tokens will be explained.
 *size,20.0,10.0,5.0  # length width height (m)
 *rotate,0.0,0.0,0.0     # pending rotation angle X Y
 *previous_rotate,10.0,0.0,1.0  # prior rotation angle X Y
-*glaze,1,1,20.0         # how many, index of parent and percent
-*door,1,1,2.5    # how many, index of parent and width of door
 *surface,front,extern_wall,0,0,0
 *surface,right,extern_wall,0,0,0
 *surface,back,extern_wall,0,0,0
@@ -410,8 +400,6 @@ the file contents each of the tokens will be explained.
 *origin,0.0,3.0,0.0  # base and top and ignored
 *size,0.0,0.0,0.0    # not used for extrude shape.
 *previous_rotate,10.0,0.0,1.0  # prior rotation angle X Y
-*glaze,1,1,20.0         # how many, index of parent and percent
-*door,1,2,1.5    # how many, index of parent and width of door
 *surface,front,extern_wall,0,0,0
 *surface,right,extern_wall,0,0,0
 *surface,left,extern_wall,0,0,0
@@ -872,7 +860,7 @@ sequence of data lines follows the following pattern:
 For an \fBextrude\fR shape zone a *nbwalls line follows the *shape 
 line and precedes the details of the geometry.  The 2nd token 
 is the number of walls in the zone (i.e. the floor and ceiling
-and inserted glazing or doors are not included in this number). 
+are not included in this number). 
 .LP
 An *origin line for shape type \fBextrude\fR has 
 three tokens.  The 1st token is the Z at the 
@@ -981,9 +969,8 @@ file and look for differences.
 .LP
 Data in *surface lines are used for zones of all shape 
 types.  The number of *surface lines is equivalent to the 
-number of parent surfaces created in by the initial shape 
-plus one for each glazing and door if those META directives 
-have been included. For example, a \fBbox\fR shape
+number of parent surfaces created in by the initial shape. 
+For example, a \fBbox\fR shape
 zone will have at least six *surface lines.  An \fBextrude\fR
 shape zone will have a *surface line for each of the *nbwalls.
 A \fBpoly\fR shaped room will have a *surface line for each
@@ -991,76 +978,13 @@ of the *nbwalls stipulated.
 .LP
 The order of *surface lines is critical 
 and begins with the parent surfaces and their implicit order 
-(discussed above).  After the parent surfaces have been 
-created any *door directives are used.  In the example file 
-above the box shaped zone has a door inserted in the first 
-(front) surface and thus it will be the 7th surface in the 
-zone. After *door directives have been acted on *glazing 
-directives are processed. In the box shaped room there is 
-one glazing and it becomes the 8th surface in the zone.
+(discussed above).
 .SH
 META components
 .LP
-Several of the components in the META file are high level
+Some components in the META file are high level
 entities that are interpreted and expanded into the
 analogue components that ESP-r understands.
-.MBL
-
-  *glaze,1,1,20.0         # how many, index of parent and percent
-.ES
-.LP
-A *glaze line is a \fBMETA\fR component which provides instructions 
-for inserting transparent surfaces into the parent surfaces of the 
-zone (the ones created via the initial \fBbox\fR
-or \fBextrude\fR shape command).  If there are no windows to be 
-inserted as child surfaces then the *glaze line should be 
-omitted. A *glaze line is optional for shape type poly. When
-ESP-r exports META files it does not use *glaze lines.
-.LP
-The number of data items in the *glaze line will vary depending on 
-how many windows are to be added.  
-.LP
-The 1st data is an integer specifying the number of glazing 
-META objects to be inserted into the zone. For EACH glazing there are two 
-data: 1st is the index of the parent surface.  The order of 
-the creation of parent surfaces is specific to the zone 
-shape type. For a box shape (with no rotation) the order 
-is front, right, back, left, top, base. For an extruded 
-shape  the walls are created based on set of supplied 
-co-ordinates followed by the top and then the base (e.g. a 
-four wall extrusion is identical to a box shape). 
-.LP
-For a poly shape zone the index of the parent surface follows from the order 
-of the *surface lines.  Care is required in specifying the parent
-surface index in poly shaped zones!
-.LP
-The 2nd glazing data item is the percentage of the parent 
-surface area to give to the glazing.  The glazing is placed 
-as a rectangle near the centre of the parent surface.  If 
-this is not specific enough then the glazing must be 
-represented as an explicit polygon within a poly shaped 
-zone.
-.MBL
-
-  *door,1,1,2.5    # how many, index of parent and width of door
-.ES
-.LP
-A *door line is a \fBMETA\fR component which provides instructions 
-for inserting a door into a parent surface in the zone (the ones 
-created via the initial \fBbox\fR or \fBextrude\fR shape command). 
-It follows a similar pattern to 
-the *glaze described above except that the 2nd door data 
-item is the width of the door (m).  The current convention 
-is that doors are inserted near the right edge of the 
-parent surface (looking from the outside). The height 
-of the door is assumed to be 2.1m if the overall height of 
-the parent surface is greater than 2.3m otherwise the height 
-of the door is 0.3m less than the height of the parent 
-surface.  As with glazing, if you want to be specific
-about the location and size of a door use a poly room
-type and represent the door as an explicit surface. A *door 
-line is optional for shape type poly. When
-ESP-r exports META files it does not use *door lines.
 .LP
 Often users have a need to represent internal mass within a zone 
 such as desks and filing cabinets or to efficiently add back-to-back 
@@ -1421,6 +1345,9 @@ Revisions
 .LP
 The following is a summary of changes made to the META file format. This
 section is work-in-progress.
+.LP
+March 2018 - depreciated *door *glazing tags and updated sample
+models and documentation.
 .LP
 March 2010 - added *zonpth, *netpth, *ctlpth, *radpth, *imgpth,
 *tmppth, *docpth and *dbspth tokens to support custom model folder
